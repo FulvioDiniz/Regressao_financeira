@@ -4,6 +4,9 @@ import json
 import time
 from datetime import datetime, timedelta
 from regressao import LinearRegression
+from msgTelegram import *
+
+
 
 # Instanciar objeto de regressão linear
 regressor = LinearRegression()
@@ -15,13 +18,20 @@ y_vals = []
 intervalo_previsao = timedelta(minutes=10)
 ultima_impressao = datetime.now()
 
-
 # Variáveis para o cálculo da taxa de acerto
-acertos = 0
-erros = 0
+token = '6037164173:AAFWH_Ojc434tGzrkHoZtKIz5FJn_szEOe8'
+acertos_compra = 0
+erros_compra = 0
+acertos_venda = 0
+erros_venda = 0
+cont = 0
+chat_id = last_chat_id(token)
+#mensagem = "Tendência de alta, pode ser uma boa hora para comprar"
+#mensagem2 = "Tendência de baixa, pode ser uma boa hora para vender"
+
 
 def adicionar_valor(y):
-    global acertos, erros, ultima_impressao
+    global acertos_compra, erros_compra, acertos_venda, erros_venda, ultima_impressao, cont, chat_id, token
     y_vals.append(y)
 
     # Gerar novo valor de x a partir do comprimento da lista de valores de y
@@ -32,40 +42,52 @@ def adicionar_valor(y):
 
     # Calcular previsão para daqui a 10 minutos
     proximo_x = len(y_vals) + (intervalo_previsao / timedelta(minutes=5))
-    previsao = regressor.predict([[proximo_x]])[0]
-    print(f"Previsão para daqui a 10 minutos: {previsao}")
-    print(f"ulima impressao: {ultima_impressao}")
-    valor = datetime.now() - ultima_impressao
-    print(f"valor: {valor}")
+    previsao = regressor.predict([[proximo_x]])[0] 
+    print(f"Última impressão: {ultima_impressao}")
+    print(f"Valor do y: {y}")
+    tempo = datetime.now() - ultima_impressao
+    print(f"Tempo desde a última impressão: {tempo}")
+    print(f"proximo_x: {proximo_x}")
+    print(f"valor contador: {cont}")
+    #send_message(token, chat_id, 'teste')
+    
+    #send_message = ('6037164173:AAFWH_Ojc434tGzrkHoZtKIz5FJn_szEOe8',-925570433, 'Tendência de alta, pode ser uma boa hora para comprar')
+   
 
     # Definir estratégia simples de compra e venda
     if datetime.now() - ultima_impressao >= intervalo_previsao:
-        if regressor.coef_ > 0:
-            print("Tendência de alta, pode ser uma boa hora para comprar")
-            if y < previsao:
-                #global acertos
-                acertos += 1
-                print("Acerto!")
+        previsao2 = regressor.predict([[proximo_x]])[0]
+        print(f"Previsão para daqui a 10 minutos: {previsao2}")
+        cont = cont + 1     
+        #print(f"Valor da previsão: {previsao}")
+        if cont > 0:
+            if  regressor.coef_ > 0:
+                print("Tendência de alta, pode ser uma boa hora para comprar")
+                send_message(token, chat_id, 'Lembrando (moeda: EUR/USD) Previsões  de 10 minutos Tendência de alta, pode ser uma boa hora para comprar')
+                #send_message = ('6037164173:AAFWH_Ojc434tGzrkHoZtKIz5FJn_szEOe8',-925570433, 'Tendência de alta, pode ser uma boa hora para comprar')
+                if y < previsao2:
+                    acertos_compra += 1
+                    print("Acerto!")
+                else:
+                    erros_compra += 1
+                    print("Erro!")
             else:
-                #global erros
-                erros += 1
-                print("Erro!")
-        else:
-            print("Tendência de baixa, pode ser melhor vender")
-            if y > previsao:
-                #global acertos
-                acertos += 1
-                print("Acerto!")
-            else:
-                #global erros
-                erros += 1
-                print("Erro!")
+                print("Tendência de baixa, pode ser melhor vender")
+                send_message(token, chat_id, 'Lembrando (moeda: EUR/USD) Previsões  de 10 minutos : Tendência de Baixa, pode ser uma boa hora para vender')
+                #send_message = ('6037164173:AAFWH_Ojc434tGzrkHoZtKIz5FJn_szEOe8',-925570433, 'Tendência de Baixa, pode ser uma boa hora para comprar')
+                if y > previsao2:
+                    acertos_venda += 1
+                    print("Acerto!")
+                else:
+                    erros_venda += 1
+                    print("Erro!")
 
-            ultima_impressao = datetime.now()
+        ultima_impressao = datetime.now()
 
         # Calcular taxa de acerto
-        taxa_acerto = acertos / (acertos + erros) * 100
-        print(f"Taxa de acerto: {taxa_acerto}%")
+        taxa_acerto_compra = (acertos_compra + acertos_venda)/cont * 100
+        print(f"Taxa de acerto para compra: {taxa_acerto_compra}%")
+        send_message(token, chat_id, f"Taxa de acerto (Em teste, não verdadeira): {taxa_acerto_compra}%")
 
 def on_message(ws, message):
     data = json.loads(message)
