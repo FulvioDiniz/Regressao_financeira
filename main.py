@@ -44,6 +44,7 @@ def adicionar_valor(y):
     print(f"valor tendencia = {tendencia}")
     print(f"valor acerto = {acerto}")
     print(f"valor erro = {erro}")
+    time.sleep(10)
 
     if cont == 1:
         preco_atual = y
@@ -58,26 +59,26 @@ def adicionar_valor(y):
             print("Tendência de alta, pode ser uma boa hora para comprar")
             preco_atual = y
             tendencia = 1
-            send_message(token, chat_id, 'Lembrando (moeda: EUR/USD) Previsões  de 10 minutos Tendência de alta, pode ser uma boa hora para comprar')   
+            send_message(token, chat_id, 'Lembrando (moeda: Indice de Volatilidade 100) Previsões  de 10 minutos Tendência de alta, pode ser uma boa hora para comprar')   
         else:
             print("Tendência de baixa, pode ser melhor vender")
             preco_atual = y
             tendencia = 2
-            send_message(token, chat_id, 'Lembrando (moeda: EUR/USD) Previsões  de 10 minutos : Tendência de Baixa, pode ser uma boa hora para vender')
+            send_message(token, chat_id, 'Lembrando (moeda: Indice de Volatilidade 100) Previsões  de 10 minutos : Tendência de Baixa, pode ser uma boa hora para vender')
 
         if validador == True:
             print("Acertou")
             acerto = acerto + 1
-            send_message(token, chat_id, 'Lembrando (moeda: EUR/USD) Previsões  de 10 minutos : Acertou')
+            send_message(token, chat_id, 'Lembrando (moeda: Indice de Volatilidade 100) Previsões  de 10 minutos : Acertou')
         else:
             print("Errou")
             erro = erro + 1
-            send_message(token, chat_id, 'Lembrando (moeda: EUR/USD) Previsões  de 10 minutos : Errou')        
+            send_message(token, chat_id, 'Lembrando (moeda: Indice de Volatilidade 100) Previsões  de 10 minutos : Errou')        
         ultima_impressao = datetime.now()
         cont = cont + 1        
         porcentagem = (acerto / cont) * 100
         print(f"Porcentagem de acerto: {porcentagem}")
-        send_message(token, chat_id, f'Lembrando (moeda: EUR/USD) Previsões  de 10 minutos : Porcentagem de acerto: {porcentagem}')
+        send_message(token, chat_id, f'Lembrando (moeda: Indice de Volatilidade 100) Previsões  de 10 minutos : Porcentagem de acerto: {porcentagem}')
      
 
 
