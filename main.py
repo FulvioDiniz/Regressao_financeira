@@ -47,7 +47,7 @@ def adicionar_valor(y):
 
     if cont == 1:
         preco_atual = y
-    time.sleep(10)
+    #time.sleep(10)
 
     if datetime.now() - ultima_impressao >= intervalo_previsao:
         previsao2 = regressor.predict([[proximo_x]])[0]
@@ -97,7 +97,7 @@ def on_close(ws):
 
 def on_open(ws):
     print("Conexão aberta")
-    subscribe_message = valor_R_50()   
+    subscribe_message = valor_R_100()   
     ws.send(json.dumps(subscribe_message))
 
 if __name__ == "__main__":

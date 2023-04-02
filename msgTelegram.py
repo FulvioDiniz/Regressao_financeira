@@ -2,7 +2,7 @@ import requests
 #from main import *
 
 
-
+#message = 'Lucro dia/ 36 win / 17 loss == 118'
 # mostra o id do último grupo adicionado
 def last_chat_id(token):
     try:
@@ -38,7 +38,7 @@ chat_id = last_chat_id(token)
 #print("Id do chat:", chat_id)
 # exemplo de mensagem
 
-#message = 'Att...'
+
 
 # enviar a mensagem
 #send_message(token, chat_id, message)

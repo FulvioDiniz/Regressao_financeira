@@ -116,3 +116,9 @@ def valor_R_50():
     }
     return subscribe_message
 
+def valor_R_100():
+    subscribe_message = {
+            "ticks": "R_100",
+            "subscribe": 1
+    }
+    return subscribe_message
